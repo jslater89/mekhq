@@ -5908,12 +5908,6 @@ public class Campaign implements Serializable {
         // the FM:Mercs costs are per jump, which brings them a little closer
         // to the CO rules. I've left that as-is for now.
 
-        // A larger option is provided for mechs, because an Overlord is dramatically
-        // more efficient for units greater than company size. Even counting the extra
-        // docking collar costs, Gazelles and Buccaneers aren't tremendously less
-        // efficient than e.g. Triumphs and Mules, so those are left as-is for now
-        // (and are less likely to come up in the first place).
-
         // Roughly an Overlord
         int largeDropshipMechCapacity = 36;
         int largeMechDropshipASFCapacity = 6;
@@ -5931,10 +5925,19 @@ public class Campaign implements Serializable {
         int asfDropshipCargoCapacity = 90;
         long asfDropshipCost = (campaignOpsCosts ? 900000 : 80000);
 
+        // Roughly a Triumph
+        int largeDropshipVehicleCapacity = 50;
+        int largeVehicleDropshipCargoCapacity = 750;
+        long largeVehicleDropshipCost = (campaignOpsCosts ? 1750000 : 430000);
+
         // Roughly a Gazelle
         int averageDropshipVehicleCapacity = 15;
         int vehicleDropshipCargoCapacity = 65;
         long vehicleDropshipCost = (campaignOpsCosts ? 900000 : 40000);
+
+        // Roughly a Mule
+        int largeDropshipCargoCapacity = 8000;
+        long largeCargoDropshipCost = (campaignOpsCosts ? 750000 : 800000);
 
         // Roughly a Buccaneer
         int averageDropshipCargoCapacity = 2300;
@@ -5946,7 +5949,13 @@ public class Campaign implements Serializable {
 
         int asfCollars = 0;
         double leasedAverageASFDropships = 0;
+
+        int vehicleCollars = 0;
+        double leasedLargeVehicleDropships = 0;
         double leasedAverageVehicleDropships = 0;
+
+        int cargoCollars = 0;
+        double leasedLargeCargoDropships = 0;
         double leasedAverageCargoDropships = 0;
 
         int leasedASFCapacity = 0;
@@ -5990,8 +5999,8 @@ public class Campaign implements Serializable {
             }
 
             // Our Union-ish dropship can carry some ASFs and cargo.
-            leasedASFCapacity = (int) Math.floor(leasedAverageMechDropships * mechDropshipASFCapacity);
-            leasedCargoCapacity = (int) Math.floor(leasedAverageMechDropships * mechDropshipCargoCapacity);
+            leasedASFCapacity += (int) Math.floor(leasedAverageMechDropships * mechDropshipASFCapacity);
+            leasedCargoCapacity += (int) Math.floor(leasedAverageMechDropships * mechDropshipCargoCapacity);
         }
 
         // Leopard CVs
@@ -6001,12 +6010,15 @@ public class Campaign implements Serializable {
             if(noASF > 0) {
                 leasedAverageASFDropships = noASF / averageDropshipASFCapacity;
                 noASF -= leasedAverageASFDropships * averageDropshipASFCapacity;
+                asfCollars += leasedAverageASFDropships;
 
                 if (noASF > 0 && noASF < (averageDropshipASFCapacity / 2)) {
                     leasedAverageASFDropships += 0.5;
+                    asfCollars += 1;
                 }
                 else if (noASF > 0) {
                     leasedAverageASFDropships += 1;
+                    asfCollars += 1;
                 }
             }
 
@@ -6014,43 +6026,80 @@ public class Campaign implements Serializable {
             leasedCargoCapacity += (asfDropshipCargoCapacity * leasedAverageASFDropships);
         }
 
+        // Triumphs
+        if(noVehicles > averageDropshipVehicleCapacity) {
+            leasedLargeVehicleDropships = noVehicles / largeDropshipVehicleCapacity;
+            noVehicles -= leasedLargeVehicleDropships * largeDropshipVehicleCapacity;
+            vehicleCollars += leasedLargeVehicleDropships;
+
+            if(noVehicles > averageDropshipVehicleCapacity) {
+                leasedLargeVehicleDropships += 1;
+                noVehicles -= largeDropshipVehicleCapacity;
+                vehicleCollars += 1;
+            }
+
+            leasedCargoCapacity += leasedLargeVehicleDropships * largeVehicleDropshipCargoCapacity;
+        }
+
         // Gazelles
         if(noVehicles > 0) {
             leasedAverageVehicleDropships = (nohv + newNolv) / averageDropshipVehicleCapacity;
-
             noVehicles = (int)((nohv + newNolv) - leasedAverageVehicleDropships * averageDropshipVehicleCapacity);
+            vehicleCollars += leasedAverageVehicleDropships;
 
             // Gazelles are pretty minimal, so no half-measures.
             if(noVehicles > 0) {
                 leasedAverageVehicleDropships += 1;
+                noVehicles -= averageDropshipVehicleCapacity;
+                vehicleCollars += 1;
             }
 
             // Our Gazelle-ish dropship can carry some cargo.
             leasedCargoCapacity += (vehicleDropshipCargoCapacity * leasedAverageVehicleDropships);
         }
 
-        if(noCargo > leasedCargoCapacity) {
-            leasedAverageCargoDropships = noCargo / averageDropshipCargoCapacity;
+        // Do we have any leftover cargo?
+        noCargo -= leasedCargoCapacity;
 
-            noCargo -= leasedCargoCapacity * averageDropshipCargoCapacity;
+        // Mules
+        if(noCargo > averageDropshipCargoCapacity) {
+            leasedLargeCargoDropships = noCargo / largeDropshipCargoCapacity;
+            noCargo -= leasedLargeCargoDropships * largeDropshipCargoCapacity;
+            cargoCollars += leasedLargeCargoDropships;
+
+            if(noCargo > averageDropshipCargoCapacity) {
+                leasedLargeCargoDropships += 1;
+                noCargo -= largeDropshipCargoCapacity;
+                cargoCollars += 1;
+            }
+        }
+
+        // Buccaneers
+        if(noCargo > 0) {
+            leasedAverageCargoDropships = noCargo / averageDropshipCargoCapacity;
+            cargoCollars += leasedAverageCargoDropships;
+            noCargo -= leasedAverageCargoDropships * averageDropshipCargoCapacity;
 
             if(noCargo > 0 && noCargo < (averageDropshipCargoCapacity / 2)) {
                 leasedAverageCargoDropships += 0.5;
+                cargoCollars += 1;
             }
             else if(noCargo > 0) {
                 leasedAverageCargoDropships += 1;
+                cargoCollars += 1;
             }
-
-            // No need to update leased cargo capacity here, because we've already guaranteed we
-            // have enough cargo capacity.
         }
 
         dropshipCost = (long) (leasedAverageMechDropships * mechDropshipCost);
         dropshipCost += (long) (leasedLargeMechDropships * largeMechDropshipCost);
 
         dropshipCost += (long) (leasedAverageASFDropships * asfDropshipCost);
+
         dropshipCost += (long) (leasedAverageVehicleDropships * vehicleDropshipCost);
+        dropshipCost += (long) (leasedLargeVehicleDropships * largeVehicleDropshipCost);
+
         dropshipCost += (long) (leasedAverageCargoDropships * cargoDropshipCost);
+        dropshipCost += (long) (leasedLargeCargoDropships * largeCargoDropshipCost);
 
         // In Campaign Ops, DropShip costs are per month, so we need to find the
         // total cost for the transit and divide it among the number of jumps.
@@ -6059,7 +6108,7 @@ public class Campaign implements Serializable {
         }
 
         // Smaller/half-dropships are cheaper to rent, but still take one collar each
-        int collarsNeeded = mechCollars + (int) (Math.ceil(leasedAverageASFDropships) + Math.ceil(leasedAverageVehicleDropships) + Math.ceil(leasedAverageCargoDropships));
+        int collarsNeeded = mechCollars + asfCollars + vehicleCollars + cargoCollars;
 
         // add owned dropships
         collarsNeeded += nDropship;
@@ -6094,7 +6143,7 @@ public class Campaign implements Serializable {
 
             totalCost = totalCost + ownDropshipCost + ownJumpshipCost;
         }
-
+        
         return totalCost;
     }
 
