@@ -471,7 +471,11 @@ public class Contract extends Mission implements Serializable, MekHqXmlSerializa
 			JumpPath jumpPath = c.calculateJumpPath(c.getCurrentPlanet(), getPlanet());
 			double days = Math.round(jumpPath.getTotalTime(currentDate, c.getLocation().getTransitTime())*100.0)/100.0;
 			int roundedMonths = (int) Math.ceil(days / 30.0);
-			transportAmount = (long)((transportComp/100.0) * 2 * c.calculateCostPerJump(false, false, jumpPath.getJumps(), roundedMonths) * jumpPath.getJumps());
+
+			// FM:Mercs transport payments take into account owned transports and do not use CampaignOps dropship costs.
+			// CampaignOps doesn't care about owned transports and does use its own dropship costs.
+			boolean campaignOps = c.getCampaignOptions().usePeacetimeCost();
+			transportAmount = (long)((transportComp/100.0) * 2 * c.calculateCostPerJump(campaignOps, campaignOps, jumpPath.getJumps(), roundedMonths) * jumpPath.getJumps());
 		}
 
 		//calculate transit amount for CO
