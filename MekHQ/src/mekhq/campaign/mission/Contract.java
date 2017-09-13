@@ -407,8 +407,9 @@ public class Contract extends Mission implements Serializable, MekHqXmlSerializa
 			int roundedMonths = (int) Math.ceil(days / 30.0);
 
 			// TODO: for Campaign Ops transport rules, use excludeOwnTransport = true.
-			transportAmount = (long)((transportComp/100.0) * 2 * c.calculateCostPerJump(false, false, jumpPath.getJumps(), roundedMonths) * jumpPath.getJumps());
-			profit -= 2 * c.calculateCostPerJump(false, false, jumpPath.getJumps(), roundedMonths) * jumpPath.getJumps();
+			boolean campaignOps = c.getCampaignOptions().useEquipmentContractBase();
+			transportAmount = (long)((transportComp/100.0) * 2 * c.calculateCostPerJump(campaignOps, campaignOps, jumpPath.getJumps(), roundedMonths) * jumpPath.getJumps());
+			profit -= 2 * c.calculateCostPerJump(campaignOps, campaignOps, jumpPath.getJumps(), roundedMonths) * jumpPath.getJumps();
 		}
 		return profit;
 	}
@@ -474,7 +475,8 @@ public class Contract extends Mission implements Serializable, MekHqXmlSerializa
 
 			// FM:Mercs transport payments take into account owned transports and do not use CampaignOps dropship costs.
 			// CampaignOps doesn't care about owned transports and does use its own dropship costs.
-			boolean campaignOps = c.getCampaignOptions().usePeacetimeCost();
+
+			boolean campaignOps = c.getCampaignOptions().useEquipmentContractBase();
 			transportAmount = (long)((transportComp/100.0) * 2 * c.calculateCostPerJump(campaignOps, campaignOps, jumpPath.getJumps(), roundedMonths) * jumpPath.getJumps());
 		}
 
