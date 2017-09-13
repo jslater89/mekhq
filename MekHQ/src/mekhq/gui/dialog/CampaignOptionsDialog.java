@@ -197,9 +197,6 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
     private JCheckBox useLoanLimitsBox;
     private JCheckBox sellUnitsBox;
     private JCheckBox sellPartsBox;
-    private JCheckBox usePeacetimeCostBox;
-    private JCheckBox useExtendedPartsModifierBox;
-    private JCheckBox showPeacetimeCostBox;
 
     private JTextField[] txtSalaryBase;
     private JSpinner[] spnSalaryXp;
@@ -250,9 +247,6 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
     private JRadioButton btnContractEquipment;
     private JRadioButton btnContractPersonnel;
     private JSpinner spnEquipPercent;
-    private JSpinner spnDropshipPercent;
-    private JSpinner spnJumpshipPercent;
-    private JSpinner spnWarshipPercent;
     private JCheckBox chkEquipContractSaleValue;
     private JCheckBox chkBLCSaleValue;
     private JSpinner spnOrderRefund;
@@ -479,9 +473,6 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
         useLoanLimitsBox.setSelected(options.useLoanLimits());
         usePercentageMaintBox.setSelected(options.usePercentageMaint());
         useInfantryDontCountBox.setSelected(options.useInfantryDontCount());
-        usePeacetimeCostBox.setSelected(options.usePeacetimeCost());
-        useExtendedPartsModifierBox.setSelected(options.useExtendedPartsModifier());
-        showPeacetimeCostBox.setSelected(options.showPeacetimeCost());
 
         useDamageMargin.setSelected(options.isDestroyByMargin());
         useQualityMaintenance.setSelected(options.useQualityMaintenance());
@@ -572,9 +563,6 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
         payForOverheadBox = new JCheckBox();
         payForMaintainBox = new JCheckBox();
         payForTransportBox = new JCheckBox();
-        usePeacetimeCostBox = new JCheckBox();
-        useExtendedPartsModifierBox = new JCheckBox();
-        showPeacetimeCostBox = new JCheckBox();
         sellUnitsBox = new JCheckBox();
         sellPartsBox = new JCheckBox();
         useQuirksBox = new JCheckBox();
@@ -1773,40 +1761,6 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         panFinances.add(useInfantryDontCountBox, gridBagConstraints);
 
-        // Campaign Operations Peacetime operating costs
-        usePeacetimeCostBox.setText(resourceMap.getString("usePeacetimeCostBox.text")); // NOI18N
-        usePeacetimeCostBox.setToolTipText(resourceMap.getString("usePeacetimeCostBox.toolTipText")); // NOI18N
-        usePeacetimeCostBox.setName("usePeacetimeCostBox"); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panFinances.add(usePeacetimeCostBox, gridBagConstraints);
-
-        useExtendedPartsModifierBox.setText(resourceMap.getString("useExtendedPartsModifierBox.text")); // NOI18N
-        //useExtendedPartsModifierBox.setToolTipText(resourceMap.getString("useExtendedPartsModifierBox.toolTipText")); // NOI18N
-        useExtendedPartsModifierBox.setName("useExtendedPartsModifierBox"); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panFinances.add(useExtendedPartsModifierBox, gridBagConstraints);
-
-        showPeacetimeCostBox.setText(resourceMap.getString("showPeacetimeCostBox.text")); // NOI18N
-        showPeacetimeCostBox.setToolTipText(resourceMap.getString("showPeacetimeCostBox.toolTipText")); // NOI18N
-        showPeacetimeCostBox.setName("showPeacetimeCostBox"); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panFinances.add(showPeacetimeCostBox, gridBagConstraints);
-
 
         clanPriceModifierLabel.setText(resourceMap.getString("clanPriceModifierLabel.text")); // NOI18N
         clanPriceModifierLabel.setName("clanPriceModifierLabel"); // NOI18N
@@ -1905,21 +1859,8 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
             btnContractPersonnel.setSelected(true);
         }
 
-        spnEquipPercent = new JSpinner(new SpinnerNumberModel(options.getEquipmentContractPercent(), 0.1, 5.0, 0.1));
-        spnEquipPercent.setEditor(new JSpinner.NumberEditor(spnEquipPercent, "0.0"));
+        spnEquipPercent = new JSpinner(new SpinnerNumberModel(options.getEquipmentContractPercent(), 0.1, 20, 0.1));
         ((JSpinner.DefaultEditor) spnEquipPercent.getEditor()).getTextField().setEditable(false);
-
-        spnDropshipPercent = new JSpinner(new SpinnerNumberModel(options.getDropshipContractPercent(), 0.0, 1.0, 0.1));
-        spnDropshipPercent.setEditor(new JSpinner.NumberEditor(spnDropshipPercent, "0.0"));
-        ((JSpinner.NumberEditor) spnDropshipPercent.getEditor()).getTextField().setEditable(false);
-
-        spnJumpshipPercent = new JSpinner(new SpinnerNumberModel(options.getJumpshipContractPercent(), 0.0, 1.0, 0.1));
-        spnJumpshipPercent.setEditor(new JSpinner.NumberEditor(spnJumpshipPercent, "0.0"));
-        ((JSpinner.DefaultEditor) spnJumpshipPercent.getEditor()).getTextField().setEditable(false);
-
-        spnWarshipPercent = new JSpinner(new SpinnerNumberModel(options.getWarshipContractPercent(), 0.0, 1.0, 0.1));
-        spnWarshipPercent.setEditor(new JSpinner.NumberEditor(spnWarshipPercent, "0.0"));
-        ((JSpinner.DefaultEditor) spnWarshipPercent.getEditor()).getTextField().setEditable(false);
 
         ButtonGroup groupContract = new ButtonGroup();
         groupContract.add(btnContractEquipment);
@@ -1943,7 +1884,7 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
         gridBagConstraints.insets = new Insets(5, 30, 5, 5);
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panMercenary.add(new JLabel("Combat Percent:"), gridBagConstraints);
+        panMercenary.add(new JLabel("Percent:"), gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -1961,55 +1902,13 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
-        gridBagConstraints.insets = new Insets(5, 30, 5, 5);
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panMercenary.add(new JLabel("Dropship Percent:"), gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
-        //gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panMercenary.add(spnDropshipPercent, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
-        gridBagConstraints.insets = new Insets(5, 30, 5, 5);
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panMercenary.add(new JLabel("Jumpship Percent:"), gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
-        //gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panMercenary.add(spnJumpshipPercent, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
-        gridBagConstraints.insets = new Insets(5, 30, 5, 5);
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panMercenary.add(new JLabel("Warship Percent:"), gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
-        //gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        panMercenary.add(spnWarshipPercent, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
         //gridBagConstraints.weighty = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         panMercenary.add(btnContractPersonnel, gridBagConstraints);
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 3;
         //gridBagConstraints.weighty = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
@@ -4308,15 +4207,9 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
         options.setUseInfantryDontCount(useInfantryDontCountBox.isSelected());
         options.setSellUnits(sellUnitsBox.isSelected());
         options.setSellParts(sellPartsBox.isSelected());
-        options.setUsePeacetimeCost(usePeacetimeCostBox.isSelected());
-        options.setUseExtendedPartsModifier(useExtendedPartsModifierBox.isSelected());
-        options.setShowPeacetimeCost(showPeacetimeCostBox.isSelected());
 
         options.setEquipmentContractBase(btnContractEquipment.isSelected());
         options.setEquipmentContractPercent((Double) spnEquipPercent.getModel().getValue());
-        options.setDropshipContractPercent((Double) spnDropshipPercent.getModel().getValue());
-        options.setJumpshipContractPercent((Double) spnJumpshipPercent.getModel().getValue());
-        options.setWarshipContractPercent((Double) spnWarshipPercent.getModel().getValue());
         options.setEquipmentContractSaleValue(chkEquipContractSaleValue.isSelected());
         options.setBLCSaleValue(chkBLCSaleValue.isSelected());
 

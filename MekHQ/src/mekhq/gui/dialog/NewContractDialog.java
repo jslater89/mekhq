@@ -404,32 +404,10 @@ public class NewContractDialog extends javax.swing.JDialog {
         totalsPanel.add(lblSupportAmount2, gridBagConstraints);
         lblSupportAmount2.addFocusListener(contractUpdateFocusListener);
 
-        JLabel lblTransitAmount1 = new JLabel(resourceMap.getString("lblTransitAmount1.text"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 1;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        totalsPanel.add(lblTransitAmount1, gridBagConstraints);
-        lblTransitAmount2 = new JLabel("+" + formatter.format(contract.getTransitAmount()));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 1;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        totalsPanel.add(lblTransitAmount2, gridBagConstraints);
-        lblTransitAmount2.addFocusListener(contractUpdateFocusListener);
-
         JLabel lblTransportAmount1 = new JLabel(resourceMap.getString("lblTransportAmount1.text"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -439,7 +417,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         lblTransportAmount2 = new JLabel("+" + formatter.format(contract.getTransportAmount()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
@@ -451,7 +429,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         JLabel lblTotalAmount1 = new JLabel(resourceMap.getString("lblTotalAmount1.text"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -461,7 +439,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         lblTotalAmount2 = new JLabel(formatter.format(contract.getTotalAmount()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
@@ -472,7 +450,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         JLabel lblSignBonusAmount1 = new JLabel(resourceMap.getString("lblSignBonusAmount1.text"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -482,7 +460,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         lblSignBonusAmount2 = new JLabel("+" + formatter.format(contract.getSigningBonusAmount()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
@@ -493,7 +471,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         JLabel lblFeeAmount1 = new JLabel(resourceMap.getString("lblFeeAmount1.text"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -503,7 +481,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         lblFeeAmount2 = new JLabel("-" + formatter.format(contract.getFeeAmount()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
@@ -514,7 +492,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         JLabel lblTotalAmountPlus1 = new JLabel(resourceMap.getString("lblTotalAmountPlus1.text"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -524,7 +502,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         lblTotalAmountPlus2 = new JLabel(formatter.format(contract.getTotalAmountPlusFeesAndBonuses()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
@@ -535,7 +513,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         JLabel lblAdvanceMoney1 = new JLabel(resourceMap.getString("lblAdvanceMoney1.text"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -545,7 +523,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         lblAdvanceMoney2 = new JLabel(formatter.format(contract.getTotalAdvanceMonies()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
@@ -556,7 +534,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         JLabel lblMonthlyAmount1 = new JLabel(resourceMap.getString("lblMonthlyAmount1.text"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 1;       
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -566,7 +544,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         lblMonthlyAmount2 = new JLabel(formatter.format(contract.getMonthlyPayOut()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
@@ -577,7 +555,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         JLabel lblProfit1 = new JLabel(resourceMap.getString("lblProfit1.text"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 1;       
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -588,7 +566,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         lblProfit2 = new JLabel(formatter.format(contract.getEstimatedTotalProfit(campaign)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -637,7 +615,7 @@ public class NewContractDialog extends javax.swing.JDialog {
         spnLength = new JSpinner(new SpinnerNumberModel(contract.getLength(), 1, 120, 1));
         spnLength.addChangeListener(contractUpdateChangeListener);
         
-        spnMultiplier = new JSpinner(new SpinnerNumberModel(contract.getMultiplier(), 0.5, 10.0, 0.1));
+        spnMultiplier = new JSpinner(new SpinnerNumberModel(contract.getMultiplier(), 1.0, 10.0, 0.1));
         spnMultiplier.addChangeListener(contractUpdateChangeListener);
         
         DefaultComboBoxModel<String> overheadModel = new DefaultComboBoxModel<String>();
@@ -973,7 +951,6 @@ public class NewContractDialog extends javax.swing.JDialog {
     	lblBaseAmount2.setText(formatter.format(contract.getBaseAmount()));
     	lblOverheadAmount2.setText("+" + formatter.format(contract.getOverheadAmount()));
     	lblSupportAmount2.setText("+" + formatter.format(contract.getSupportAmount()));
-    	lblTransitAmount2.setText("+" + formatter.format(contract.getTransitAmount()));
     	lblTransportAmount2.setText("+" + formatter.format(contract.getTransportAmount()));
     	lblTotalAmount2.setText(formatter.format(contract.getTotalAmount()));
     	lblSignBonusAmount2.setText("+" + formatter.format(contract.getSigningBonusAmount()));
@@ -1016,7 +993,6 @@ public class NewContractDialog extends javax.swing.JDialog {
     protected javax.swing.JLabel lblBaseAmount2;
     protected javax.swing.JLabel lblOverheadAmount2;
     protected javax.swing.JLabel lblSupportAmount2;
-    protected javax.swing.JLabel lblTransitAmount2;
     protected javax.swing.JLabel lblTransportAmount2;
     protected javax.swing.JLabel lblTotalAmount2;
     protected javax.swing.JLabel lblSignBonusAmount2;
