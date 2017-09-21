@@ -17,3 +17,6 @@ MekHQ.jar
 /*.tar.bz2
 /*.blame
 /.classpath
+/src/.idea
+/src/MekHQ.iml
+/src/out
