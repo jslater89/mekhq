@@ -34,17 +34,6 @@ import org.apache.commons.text.RandomStringGenerator;
 import org.joda.time.DateTime;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-<<<<<<< HEAD
-
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-=======
->>>>>>> master
 
 import java.io.PrintWriter;
 import java.io.Serializable;
