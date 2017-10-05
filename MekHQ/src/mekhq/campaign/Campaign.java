@@ -192,8 +192,10 @@ import mekhq.campaign.personnel.RetirementDefectionTracker;
 import mekhq.campaign.personnel.Skill;
 import mekhq.campaign.personnel.SkillType;
 import mekhq.campaign.personnel.SpecialAbility;
+import mekhq.campaign.rating.CampaignOpsReputation;
+import mekhq.campaign.rating.FieldManualMercRevDragoonsRating;
 import mekhq.campaign.rating.IUnitRating;
-import mekhq.campaign.rating.UnitRatingFactory;
+import mekhq.campaign.rating.UnitRatingMethod;
 import mekhq.campaign.unit.CrewType;
 import mekhq.campaign.unit.TestUnit;
 import mekhq.campaign.unit.Unit;
@@ -323,6 +325,7 @@ public class Campaign implements Serializable, ITechManager {
     private String shipSearchResult; //AtB
     private Calendar shipSearchExpiration; //AtB
     private IUnitGenerator unitGenerator;
+    private IUnitRating unitRating;
 
     public Campaign() {
         id = UUID.randomUUID();
@@ -360,11 +363,11 @@ public class Campaign implements Serializable, ITechManager {
         partsStore = new PartsStore(this);
         gameOptions = new GameOptions();
         gameOptions.initialize();
-        gameOptions.getOption("year").setValue(calendar.get(Calendar.YEAR));
+        gameOptions.getOption("year").setValue(getGameYear());
         game.setOptions(gameOptions);
         customs = new ArrayList<String>();
         shoppingList = new ShoppingList();
-        news = new News(calendar.get(Calendar.YEAR), id.getLeastSignificantBits());
+        news = new News(getGameYear(), id.getLeastSignificantBits());
         personnelMarket = new PersonnelMarket();
         contractMarket = new ContractMarket();
         unitMarket = new UnitMarket();
@@ -422,11 +425,11 @@ public class Campaign implements Serializable, ITechManager {
     }
 
     public String getEraName() {
-        return Era.getEraNameFromYear(calendar.get(Calendar.YEAR));
+        return Era.getEraNameFromYear(getGameYear());
     }
 
     public int getEra() {
-        return Era.getEra(calendar.get(Calendar.YEAR));
+        return Era.getEra(getGameYear());
     }
 
     public String getTitle() {
@@ -534,7 +537,7 @@ public class Campaign implements Serializable, ITechManager {
     		rm.setIgnoreRatEra(campaignOptions.canIgnoreRatEra());
     		unitGenerator = rm;    			
 		} else {
-			RATGeneratorConnector rgc = new RATGeneratorConnector(calendar.get(Calendar.YEAR));
+			RATGeneratorConnector rgc = new RATGeneratorConnector(getGameYear());
 			unitGenerator = rgc;
 		}    	
     }
@@ -2112,7 +2115,7 @@ public class Campaign implements Serializable, ITechManager {
     }
 
     public void reloadNews() {
-        news.loadNewsFor(calendar.get(Calendar.YEAR), id.getLeastSignificantBits());
+        news.loadNewsFor(getGameYear(), id.getLeastSignificantBits());
     }
 
     public int getDeploymentDeficit(AtBContract contract) {
@@ -2149,8 +2152,8 @@ public class Campaign implements Serializable, ITechManager {
         }
 
         // Ensure that the MegaMek year GameOption matches the campaign year
-        if (gameOptions.intOption("year") != calendar.get(Calendar.YEAR)) {
-            gameOptions.getOption("year").setValue(calendar.get(Calendar.YEAR));
+        if (gameOptions.intOption("year") != getGameYear()) {
+            gameOptions.getOption("year").setValue(getGameYear());
         }
 
         //read the news
@@ -2219,7 +2222,7 @@ public class Campaign implements Serializable, ITechManager {
 
             	RandomFactionGenerator.getInstance().updateTables(calendar.getTime(),
             			location.getCurrentPlanet(), campaignOptions);
-                IUnitRating rating = UnitRatingFactory.getUnitRating(this);
+                IUnitRating rating = getUnitRating();
                 rating.reInitialize();
 
                 for (Mission m : missions) {
@@ -3055,7 +3058,7 @@ public class Campaign implements Serializable, ITechManager {
     }
 
     public String getFactionName() {
-        return getFaction().getFullName(getEra());
+        return getFaction().getFullName(getGameYear());
     }
 
     public void setFactionCode(String i) {
@@ -4270,6 +4273,8 @@ public class Campaign implements Serializable, ITechManager {
                         System.currentTimeMillis() - timestamp));
         timestamp = System.currentTimeMillis();
 
+        retVal.unitRating = null;
+        
         MekHQ.getLogger().log(Campaign.class, METHOD_NAME, LogLevel.INFO,
                 "Load of campaign file complete!"); //$NON-NLS-1$
 
@@ -5550,8 +5555,7 @@ public class Campaign implements Serializable, ITechManager {
     		}
     		//Higher rated units are more likely to have Bloodnamed
     		if (campaignOptions.useDragoonRating()) {
-    			IUnitRating rating = UnitRatingFactory.getUnitRating(this);
-    			rating.reInitialize();
+    			IUnitRating rating = getUnitRating();
     			bloodnameTarget += IUnitRating.DRAGOON_C - (campaignOptions.getUnitRatingMethod().equals(mekhq.campaign.rating.UnitRatingMethod.FLD_MAN_MERCS_REV)?
     					rating.getUnitRatingAsInteger():rating.getModifier());
     		}
@@ -5591,7 +5595,7 @@ public class Campaign implements Serializable, ITechManager {
     				break;
     			}
     			person.setBloodname(Bloodname.randomBloodname(factionCode, phenotype,
-    						calendar.get(Calendar.YEAR)).getName());
+    						getGameYear()).getName());
     		}
         }
         MekHQ.triggerEvent(new PersonChangedEvent(person));
@@ -6243,7 +6247,7 @@ public class Campaign implements Serializable, ITechManager {
         target.append(partWork.getAllMods(tech));
 
         if (getCampaignOptions().useEraMods()) {
-            target.addModifier(getFaction().getEraMod(getEra()), "era");
+            target.addModifier(getFaction().getEraMod(getGameYear()), "era");
         }
 
         boolean isOvertime = false;
@@ -6310,7 +6314,7 @@ public class Campaign implements Serializable, ITechManager {
         target.append(partWork.getAllModsForMaintenance());
 
         if (getCampaignOptions().useEraMods()) {
-            target.addModifier(getFaction().getEraMod(getEra()), "era");
+            target.addModifier(getFaction().getEraMod(getGameYear()), "era");
         }
 
         if (null != partWork.getUnit() && null != tech) {
@@ -7002,10 +7006,8 @@ public class Campaign implements Serializable, ITechManager {
         unit.runDiagnostic(false);
     }
 
-    public String getUnitRating() {
-        IUnitRating rating = UnitRatingFactory.getUnitRating(this);
-        rating.reInitialize();
-        return rating.getUnitRating();
+    public String getUnitRatingText() {
+        return getUnitRating().getUnitRating();
     }
 
 	/**
@@ -7021,8 +7023,7 @@ public class Campaign implements Serializable, ITechManager {
 		if (!getCampaignOptions().useDragoonRating()) {
 			return IUnitRating.DRAGOON_C;
 		}
-		IUnitRating rating = UnitRatingFactory.getUnitRating(this);
-		rating.reInitialize();
+		IUnitRating rating = getUnitRating();
 		return getCampaignOptions().getUnitRatingMethod().equals(mekhq.campaign.rating.UnitRatingMethod.FLD_MAN_MERCS_REV)?
 				rating.getUnitRatingAsInteger():rating.getModifier();
 	}
@@ -7037,7 +7038,7 @@ public class Campaign implements Serializable, ITechManager {
 
     public void setStartingPlanet() {
     	Map<String, Planet> planetList = Planets.getInstance().getPlanets();
-        Planet startingPlanet = planetList.get(getFaction().getStartingPlanet(getEra()));
+        Planet startingPlanet = planetList.get(getFaction().getStartingPlanet(getGameYear()));
 
         if (startingPlanet == null) {
         	startingPlanet = planetList.get(JOptionPane.showInputDialog("This faction does not have a starting planet for this era. Please choose a planet."));
@@ -8892,6 +8893,31 @@ public class Campaign implements Serializable, ITechManager {
         return false;
     }
 
+	/**
+	 * Returns the type of rating method as selected in the Campaign Options dialog. Lazy-loaded for performance.
+	 * Default is CampaignOpsReputation
+	 */
+	public IUnitRating getUnitRating() {
+	    // if we switched unit rating methods, 
+	    if(unitRating != null && 
+	            (unitRating.getUnitRatingMethod() != getCampaignOptions().getUnitRatingMethod())) {
+	        unitRating = null;
+	    }
+	    
+		if(unitRating == null) {
+			UnitRatingMethod method = getCampaignOptions().getUnitRatingMethod();
+			
+		    if (UnitRatingMethod.FLD_MAN_MERCS_REV.equals(method)) {
+		        unitRating = new FieldManualMercRevDragoonsRating(this);
+		    }
+		    else {
+		    	unitRating = new CampaignOpsReputation(this);
+		    }
+		}
+		
+		return unitRating;
+	}
+
     public int getPeacetimeCost() {
         int cost = 0;
 
@@ -8902,7 +8928,7 @@ public class Campaign implements Serializable, ITechManager {
         return cost;
     }
 
-    public long getMonthlySpareParts() {
+    private long getMonthlySpareParts() {
         long partsCost = 0;
 
         for (Unit u : getUnits()) {
@@ -8914,7 +8940,7 @@ public class Campaign implements Serializable, ITechManager {
         return partsCost;
     }
 
-    public long getMonthlyFuel() {
+    private long getMonthlyFuel() {
         long fuelCost = 0;
 
         for (Unit u : getUnits()) {
@@ -8926,7 +8952,7 @@ public class Campaign implements Serializable, ITechManager {
         return fuelCost;
     }
 
-    public long getMonthlyAmmo() {
+    private long getMonthlyAmmo() {
         long ammoCost= 0;
 
         for (Unit u : getUnits()) {
@@ -8937,15 +8963,11 @@ public class Campaign implements Serializable, ITechManager {
         }
         return ammoCost;
     }
-
-    public boolean isFactionComstar() {
-        return getFactionCode().equals("CS");
-    }
-
+    
     @Override
     public int getTechIntroYear() {
         if (campaignOptions.limitByYear()) {
-            return calendar.get(Calendar.YEAR);
+            return getGameYear();
         } else {
             return Integer.MAX_VALUE;
         }
