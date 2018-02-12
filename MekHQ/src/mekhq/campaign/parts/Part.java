@@ -49,6 +49,7 @@ import mekhq.campaign.Campaign;
 import mekhq.campaign.parts.equipment.EquipmentPart;
 import mekhq.campaign.parts.equipment.MissingEquipmentPart;
 import mekhq.campaign.personnel.Person;
+import mekhq.campaign.personnel.PersonnelOptions;
 import mekhq.campaign.personnel.SkillType;
 import mekhq.campaign.unit.Unit;
 import mekhq.campaign.work.IAcquisitionWork;
@@ -334,6 +335,11 @@ public abstract class Part implements Serializable, MekHqXmlSerializable, IPartW
 	}
 
 	protected long adjustCostsForCampaignOptions(long cost) {
+	    // if the part doesn't cost anything, no amount of multiplication will change it
+	    if(cost == 0) { 
+	        return cost;
+	    }
+	    
 		if(getTechBase() == T_CLAN) {
 			cost *= campaign.getCampaignOptions().getClanPriceModifier();
 		}
@@ -896,8 +902,9 @@ public abstract class Part implements Serializable, MekHqXmlSerializable, IPartW
 	        }
 		}
 		if(isClanTechBase() || (this instanceof MekLocation && this.getUnit() != null && this.getUnit().getEntity().isClan())) {
-			if (null != tech && !tech.isClanner()) {
-				mods.addModifier(2, "clan tech");
+			if (null != tech && !tech.isClanner()
+			        && !tech.getOptions().booleanOption(PersonnelOptions.TECH_CLAN_TECH_KNOWLEDGE)) {
+				mods.addModifier(2, "Clan tech");
 			}
 		}
 		String qualityName = getQualityName(quality, campaign.getCampaignOptions().reverseQualityNames());
@@ -942,9 +949,10 @@ public abstract class Part implements Serializable, MekHqXmlSerializable, IPartW
 	    }
 	    if(isClanTechBase() || (this instanceof MekLocation && this.getUnit() != null && this.getUnit().getEntity().isClan())) {
 	        if (campaign.getPerson(getTeamId()) == null) {
-	            mods.addModifier(2, "clan tech");
-	        } else if (!campaign.getPerson(getTeamId()).isClanner()) {
-	            mods.addModifier(2, "clan tech");
+	            mods.addModifier(2, "Clan tech");
+	        } else if (!campaign.getPerson(getTeamId()).isClanner()
+                    && !campaign.getPerson(getTeamId()).getOptions().booleanOption(PersonnelOptions.TECH_CLAN_TECH_KNOWLEDGE)) {
+	            mods.addModifier(2, "Clan tech");
 	        }
 	    }
 
@@ -1057,6 +1065,22 @@ public abstract class Part implements Serializable, MekHqXmlSerializable, IPartW
         sj.add(hits + " hit(s)");
         return sj.toString();
     }
+	
+	/**
+	 * Converts the array of strings normally returned by a call to campaign.getInventory() 
+	 * to a string that reads like "(x in transit, y on order)"
+	 * @param inventories The inventory array, see campaign.getInventory() for details.
+	 * @return Human readable string.
+	 */
+	public String getOrderTransitStringForDetails(String[] inventories) {
+        String inTransitString = inventories[1].startsWith("0 ") ? "" : inventories[1] + " in transit";
+        String onOrderString = inventories[2].startsWith("0 ") ? "" : inventories[2] + " on order";
+        String transitOrderSeparator = inTransitString.length() > 0 && onOrderString.length() > 0 ? ", " : "";
+        String orderTransitString = (inTransitString.length() > 0 || onOrderString.length() > 0) ? 
+                String.format("(%s%s%s)", inTransitString, transitOrderSeparator, onOrderString) : "";
+    
+        return orderTransitString;
+	}
 
 	@Override
 	public boolean isSalvaging() {
